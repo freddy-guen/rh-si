@@ -1,0 +1,13 @@
+{
+  "employes" : [
+    {
+      "id" : 1,
+      "nom" : "Guenengafo",
+      "prenom" : "Freddy",
+      "dateNaissance" : "12/01/1994",
+      "role" : "Concepteur & développeur",
+      "dateEntree" : "17/07/2023",
+      "salaire" : "5000"
+    }
+  ]
+}
