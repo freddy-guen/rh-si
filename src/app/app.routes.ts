@@ -3,6 +3,10 @@ import { EmployeListComponent } from './component/employe-list/employe-list.comp
 
 export const routes: Routes = [
   {
+    path : '',
+    component : EmployeListComponent
+  },
+  {
     path : 'employe',
     component : EmployeListComponent
   }

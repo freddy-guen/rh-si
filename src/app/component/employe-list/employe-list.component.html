@@ -1,1 +1,64 @@
-<p>employe-list works!</p>
+<mat-card>
+  <mat-card-header>
+    <!--<h2>Liste des employés</h2>-->
+    <button mat-raised-button color="primary" (click)="addEmploye()">Nouvel employé</button>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <!-- Identifiant -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Identifiant </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Nom -->
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef> Nom </th>
+        <td mat-cell *matCellDef="let element"> {{element.nom}} </td>
+      </ng-container>
+
+      <!-- Prénom -->
+      <ng-container matColumnDef="prenom">
+        <th mat-header-cell *matHeaderCellDef> Prénom </th>
+        <td mat-cell *matCellDef="let element"> {{element.prenom}} </td>
+      </ng-container>
+
+      <!-- Date de naissance -->
+      <ng-container matColumnDef="dateNaissance">
+        <th mat-header-cell *matHeaderCellDef> Date Nais. </th>
+        <td mat-cell *matCellDef="let element"> {{ element.dateNaissance | date:'dd/MM/yyyy' }} </td>
+      </ng-container>
+
+      <!-- Rôle -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef> Rôle </th>
+        <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+      </ng-container>
+
+      <!-- Date d'entrée -->
+      <ng-container matColumnDef="dateEntree">
+        <th mat-header-cell *matHeaderCellDef> Date entrée </th>
+        <td mat-cell *matCellDef="let element"> {{ element.dateEntree | date:'dd/MM/yyyy' }} </td>
+      </ng-container>
+
+      <!-- Salaire -->
+      <ng-container matColumnDef="salaire">
+        <th mat-header-cell *matHeaderCellDef> Salaire </th>
+        <td mat-cell *matCellDef="let element"> {{ element.salaire | currency:'EUR' }} </td>
+      </ng-container>
+
+      <!-- Action -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-raised-button color="primary">Editer</button>
+          <button mat-raised-button color="accent">Supprimer</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
