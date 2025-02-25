@@ -44,18 +44,7 @@ export class EmployeListComponent implements OnInit, OnDestroy {
   }
 
   addEmploye() {
-    this.dialog.open(
-      AddEmployeComponent,
-      {
-        width : '50%',
-        enterAnimationDuration : '500ms',
-        exitAnimationDuration : '500ms'
-      }
-    ).afterClosed().subscribe( //après la fermeture de la popup on recharge en appelant getAllEmployes
-      o => {
-        this.getAllEmployes();
-      }
-    )
+    this.openPopup(0);
   }
 
   getAllEmployes() {
@@ -68,4 +57,36 @@ export class EmployeListComponent implements OnInit, OnDestroy {
     this.subscription.add(sub);
   }
 
+  editEmploye(id : number) {
+    this.openPopup(id);
+  }
+
+  deleteEmploye(id : number) {
+    if(confirm('Êtes-vous sur de vouloir supprimer cet employé ?')) {
+      let sub = this.serviceEmploye.deleteEmploye(id).subscribe(
+        result => { // si tout se passe bien, on recharge la liste après suppression
+          this.getAllEmployes();
+        }
+      );
+      this.subscription.add(sub);
+    }
+  }
+
+  openPopup(employeId : number) {
+    this.dialog.open(
+      AddEmployeComponent,
+      {
+        width : '50%',
+        enterAnimationDuration : '500ms',
+        exitAnimationDuration : '500ms',
+        data : {
+          'code' : employeId
+        }
+      }
+    ).afterClosed().subscribe( //après la fermeture de la popup on recharge en appelant getAllEmployes
+      o => {
+        this.getAllEmployes();
+      }
+    );
+  }
 }

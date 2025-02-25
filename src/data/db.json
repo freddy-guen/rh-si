@@ -1,31 +1,40 @@
 {
   "employes": [
     {
-      "id": 1,
-      "nom": "Guen",
+      "id": "1",
+      "nom": "Guenengafo",
       "prenom": "Freddy",
       "dateNaissance": "2025-02-25T14:51:27.944Z",
       "role": "manager",
       "dateEntree": "2025-02-25T14:51:27.944Z",
-      "salaire": 5000
+      "salaire": "5200"
     },
     {
-      "id": 0,
-      "nom": "Biroboy",
-      "prenom": "Freddy",
-      "dateNaissance": "1994-11-30T23:00:00.000Z",
-      "role": "developpeur",
-      "dateEntree": "2025-02-25T16:06:39.993Z",
-      "salaire": "4200"
-    },
-    {
-      "id": 0,
-      "nom": "Guenengafo",
-      "prenom": "Galvani",
-      "dateNaissance": "1990-09-09T22:00:00.000Z",
+      "id": "2",
+      "nom": "Mini",
+      "prenom": "Nelly",
+      "dateNaissance": "2025-02-25T17:34:25.272Z",
       "role": "manager",
-      "dateEntree": "2025-02-25T17:20:30.807Z",
-      "salaire": "8000"
+      "dateEntree": "2025-02-25T17:34:25.272Z",
+      "salaire": "2000"
+    },
+    {
+      "id": "3",
+      "nom": "Lamine",
+      "prenom": "Marius",
+      "dateNaissance": "2025-02-25T17:35:38.909Z",
+      "role": "developpeur",
+      "dateEntree": "2025-02-25T17:35:38.909Z",
+      "salaire": "6000"
+    },
+    {
+      "id": "5",
+      "nom": "Zézo",
+      "prenom": "Yann",
+      "dateNaissance": "2025-02-25T17:41:12.232Z",
+      "role": "po",
+      "dateEntree": "2025-02-25T17:41:12.233Z",
+      "salaire": 0
     }
   ]
 }

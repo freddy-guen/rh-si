@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,7 +10,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Employe } from '../../model/employe';
 import { EmployeService } from '../../service/employe.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -31,17 +31,13 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './add-employe.component.html',
   styleUrl: './add-employe.component.css'
 })
-export class AddEmployeComponent {
-
-  constructor(
-    private employeService : EmployeService,
-    private ref : MatDialogRef<AddEmployeComponent>,
-    private toast : ToastrService
-  ) {
-
-  }
+export class AddEmployeComponent implements OnInit{
 
   titre = "Ajout d'un nouvel employé";
+
+  dialogData : any;
+
+  isEdit = false;
 
   employeForm = new FormGroup({
     id : new FormControl(0),
@@ -53,6 +49,38 @@ export class AddEmployeComponent {
     salaire : new FormControl(0, Validators.required)
   });
 
+  constructor(
+    private employeService : EmployeService,
+    private ref : MatDialogRef<AddEmployeComponent>,
+    private toast : ToastrService,
+    @Inject(MAT_DIALOG_DATA) public data : any
+  ) {
+
+  }
+
+  ngOnInit(): void {
+    this.dialogData = this.data;
+    if(this.dialogData.code > 0) {
+      this.titre = "Modification d'un employé";
+      this.isEdit = true;
+      this.employeService.getEmployeById(this.dialogData.code).subscribe(
+        result => {
+          let _data = result;
+          if(_data != null) {
+            this.employeForm.setValue({
+              id: _data.id,
+              nom: _data.nom,
+              prenom: _data.prenom,
+              dateNaissance: _data.dateNaissance,
+              role: _data.role,
+              dateEntree: _data.dateEntree,
+              salaire: _data.salaire
+            })
+          }
+        }
+      )
+    }
+  }
 
   saveEmploye() {
     if(this.employeForm.valid) {
@@ -66,15 +94,22 @@ export class AddEmployeComponent {
         salaire: this.employeForm.value.salaire as number,
       };
 
-      this.employeService.addEmploye(employe).subscribe(
-        result => {
-          this.toast.success("L'employé a été créé avec succès", "Succès");
-          this.closePopup();
-        },
-        error => {
-          this.toast.error("Une erreur est survenue lors de la création.", "Erreur");
-        }
-      );
+      if(this.isEdit) {
+        this.employeService.updateEmploye(employe).subscribe(
+          result => {
+            this.toast.success("Mise à jour avec succès", "Mise à jour");
+            this.closePopup();
+          }
+        );
+      }
+      else {
+        this.employeService.addEmploye(employe).subscribe(
+          result => {
+            this.toast.success("Création avec succès", "Création");
+            this.closePopup();
+          }
+        );
+      }
 
     }
     else {
