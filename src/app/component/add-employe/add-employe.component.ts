@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Employe } from '../../model/employe';
 import { EmployeService } from '../../service/employe.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-employe',
@@ -34,7 +35,9 @@ export class AddEmployeComponent {
 
   constructor(
     private employeService : EmployeService,
-    private ref : MatDialogRef<AddEmployeComponent>) {
+    private ref : MatDialogRef<AddEmployeComponent>,
+    private toast : ToastrService
+  ) {
 
   }
 
@@ -65,8 +68,11 @@ export class AddEmployeComponent {
 
       this.employeService.addEmploye(employe).subscribe(
         result => {
-          alert('Enregistré');
+          this.toast.success("L'employé a été créé avec succès", "Succès");
           this.closePopup();
+        },
+        error => {
+          this.toast.error("Une erreur est survenue lors de la création.", "Erreur");
         }
       );
 
