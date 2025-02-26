@@ -5,9 +5,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AddEmployeComponent } from '../add-employe/add-employe.component';
 import { Employe } from '../../model/employe';
-import { EmployeService } from '../../service/employe.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { deleteEmploye, loadEmploye } from '../../store/employe.actions';
+import { getListeEmployes } from '../../store/employe.selectors';
 
 @Component({
   selector: 'app-employe-list',
@@ -26,12 +28,12 @@ export class EmployeListComponent implements OnInit, OnDestroy {
   employesList : Employe[] = [];
   dataSource !: MatTableDataSource<Employe>;
   displayedColumns : string[] = ['id', 'nom', 'prenom', 'dateNaissance', 'role', 'dateEntree', 'salaire', 'action'];
-  //displayedColumns : string[] = ['id', 'nom', 'prenom', 'dateNaissance', 'role', 'dateEntree', 'salaire'];
   subscription = new Subscription();
 
   constructor(
     private dialog : MatDialog,
-    private serviceEmploye : EmployeService){
+    private store : Store
+  ){
 
   }
 
@@ -48,13 +50,13 @@ export class EmployeListComponent implements OnInit, OnDestroy {
   }
 
   getAllEmployes() {
-    let sub = this.serviceEmploye.getAllEmployes().subscribe(
+    this.store.dispatch(loadEmploye());
+    this.store.select(getListeEmployes).subscribe(
       result => {
         this.employesList = result;
         this.dataSource = new MatTableDataSource(this.employesList);
       }
-    );
-    this.subscription.add(sub);
+    )
   }
 
   editEmploye(id : number) {
@@ -63,12 +65,7 @@ export class EmployeListComponent implements OnInit, OnDestroy {
 
   deleteEmploye(id : number) {
     if(confirm('Êtes-vous sur de vouloir supprimer cet employé ?')) {
-      let sub = this.serviceEmploye.deleteEmploye(id).subscribe(
-        result => { // si tout se passe bien, on recharge la liste après suppression
-          this.getAllEmployes();
-        }
-      );
-      this.subscription.add(sub);
+      this.store.dispatch(deleteEmploye({ id : id}));
     }
   }
 

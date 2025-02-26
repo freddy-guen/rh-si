@@ -9,9 +9,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Employe } from '../../model/employe';
-import { EmployeService } from '../../service/employe.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
+import { Store } from '@ngrx/store';
+import { addEmploye, getEmploye, updateEmploye } from '../../store/employe.actions';
+import { selectEmploye } from '../../store/employe.selectors';
 
 @Component({
   selector: 'app-add-employe',
@@ -50,9 +51,8 @@ export class AddEmployeComponent implements OnInit{
   });
 
   constructor(
-    private employeService : EmployeService,
+    private store : Store,
     private ref : MatDialogRef<AddEmployeComponent>,
-    private toast : ToastrService,
     @Inject(MAT_DIALOG_DATA) public data : any
   ) {
 
@@ -63,7 +63,8 @@ export class AddEmployeComponent implements OnInit{
     if(this.dialogData.code > 0) {
       this.titre = "Modification d'un employé";
       this.isEdit = true;
-      this.employeService.getEmployeById(this.dialogData.code).subscribe(
+      this.store.dispatch(getEmploye({ id : this.dialogData.code }));
+      this.store.select(selectEmploye).subscribe(
         result => {
           let _data = result;
           if(_data != null) {
@@ -78,7 +79,7 @@ export class AddEmployeComponent implements OnInit{
             })
           }
         }
-      )
+      );
     }
   }
 
@@ -95,21 +96,12 @@ export class AddEmployeComponent implements OnInit{
       };
 
       if(this.isEdit) {
-        this.employeService.updateEmploye(employe).subscribe(
-          result => {
-            this.toast.success("Mise à jour avec succès", "Mise à jour");
-            this.closePopup();
-          }
-        );
+        this.store.dispatch(updateEmploye({ employe : employe }));
       }
       else {
-        this.employeService.addEmploye(employe).subscribe(
-          result => {
-            this.toast.success("Création avec succès", "Création");
-            this.closePopup();
-          }
-        );
+        this.store.dispatch(addEmploye({ employe : employe }));
       }
+      this.closePopup();
 
     }
     else {
